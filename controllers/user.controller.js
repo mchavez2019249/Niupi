@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../services/jwt');
 
 //CREATE INIT
-
+//prueba prueba prueba prueba prueba
 //LOGIN 
 
 //SAVE 
