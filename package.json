@@ -1,0 +1,11 @@
+{
+  "name": "controltorneo",
+  "version": "1.0.0",
+  "description": "proyecto final 3bimestre grupo 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Grupo 1",
+  "license": "MIT"
+}
