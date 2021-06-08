@@ -147,9 +147,42 @@ function deleteUser(req, res){
     }
 }
 //SEARCH
-
+function searchUser(req, res){
+    var params = req.body;
+    var userId = req.params.id;
+    if(userId != req.user.sub){
+        res.status(500).send({message: 'No posees permisos para realizar acciones de administrador'})
+    }else{
+    if(params.search){
+        User.find({$or:[{name: params.search},
+            {lastname: params.search},
+        {username: params.search},
+    ]}, (err, resultsSearch)=>{
+            if(err){
+                return res.status(500).send({message: 'ERROR GENERAL', err})
+            }else if(resultsSearch){
+                return res.send({resultsSearch})
+            }else{
+                return res.status(404).send({message:'No hay registros para mostrar'})
+            }
+        })
+    }else{
+        return res.status(403).send({message:'Ingresa algún dato en el campo de búsqueda'})
+    }
+    }
+}
 //LIST
-
+function getUsers(req, res){
+    User.find({}).exec((err, user)=>{
+        if(err){
+            res.status(500).send({message: 'Error en el servidor'})
+        }else if(user){
+            res.status(200).send({message: 'Usuarios encontrados', user})
+        }else{
+            res.status(200).send({message: 'No hay registros'})
+        }
+    }) 
+}
 //UPLOAD IMAGE
 function uploadImage(req, res){
     var userId = req.params.id;
@@ -210,7 +243,10 @@ module.exports = {
     deleteUser,
     updateUser,
     uploadImage,
-    getImage
+    getImage,
+    searchUser,
+    getUsers,
+    createInit
 }
 
 
