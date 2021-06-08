@@ -11,40 +11,62 @@ var jwt = require('../services/jwt');
 //SAVE 
 
 //UPDATE
+function updateUser(req, res){
+    let userId = req.params.id;
+    let update = req.body;
 
-function updateUser(req, res) {
-    var userId = req.params.id;
-    var update = req.body;
-
-    if (userId != req.user.sub) {
-        res.status(403).send({message: 'Error no tienes permiso para acceder a esta ruta'})
-    } else {
-        User.findOne({_id: req.params.id}, (err, userFind) => {
-                if (err) {
-                    res.status(500).send({message: 'Error general'});
-                } else if (userFind) {
-                    var rol = userFind.role;
-                    if (rol != 'ADMIN') {
-                        res.status(500).send({message: 'No puede modficar al usuario debido a que es un USER'});
-                    } else {
-                        User.findByIdAndUpdate(userId, update,
-                             {new: true},
-                             (err, userUpdated) => {
-                            if (err) {
-                                res.status(500).send({message: 'Error general al actualizar'});
-                            } else if (userUpdated) {
-                                res.status(200).send({message:'Usuario actualizado',userUpdated});
-                            } else {
-                                res.status(404).send({message: 'No se ha podido actualizar'});
+    if(userId != req.user.sub){
+        return res.status(401).send({ message: 'No tienes permiso para realizar esta acción'});
+    }else{
+        if(update.password || update.role){
+            return res.status(401).send({ message: 'No se puede actualizar la contraseña ni el rol desde esta función'});
+        }else{
+            if(update.username){
+                User.findOne({username: update.username.toLowerCase()}, (err, userFind)=>{
+                    if(err){
+                        return res.status(500).send({ message: 'Error general'});
+                    }else if(userFind){
+                        if(userFind._id == req.user.sub){
+                            User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated)=>{
+                                if(err){
+                                    return res.status(500).send({message: 'Error general al actualizar'});
+                                }else if(userUpdated){
+                                    return res.send({message: 'Usuario actualizado', userUpdated});
+                                }else{
+                                    return res.send({message: 'No se pudo actualizar al usuario'});
+                                }
+                            })
+                        }else{
+                            return res.send({message: 'Nombre de usuario ya en uso'});
+                        }
+                    }else{
+                        User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated)=>{
+                            if(err){
+                                return res.status(500).send({message: 'Error general al actualizar'});
+                            }else if(userUpdated){
+                                return res.send({message: 'Usuario actualizado', userUpdated});
+                            }else{
+                                return res.send({message: 'No se pudo actualizar al usuario'});
                             }
                         })
                     }
-                } else {
-                    res.status(404).send({message: 'El usuario no existe'});
-                }
-            })
+                })
+            }else{
+                User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated)=>{
+                    if(err){
+                        return res.status(500).send({message: 'Error general al actualizar'});
+                    }else if(userUpdated){
+                        return res.send({message: 'Usuario actualizado', userUpdated});
+                    }else{
+                        return res.send({message: 'No se pudo actualizar al usuario'});
+                    }
+                })
+            }
+        }
     }
-};
+    
+}
+
 //DELETE 
 function deleteUser(req, res){
     let userId = req.params.idU;
