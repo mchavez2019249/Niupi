@@ -168,7 +168,9 @@ function getImage(req, res){
 //FUNCTIONS ROUTES
 module.exports = {
     deleteUser,
-    updateUser
+    updateUser,
+    uploadImage,
+    getImage
 }
 
 
