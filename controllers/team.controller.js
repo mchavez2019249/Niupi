@@ -135,11 +135,67 @@ function searchTeam(req, res){
 }
 
 //UPLOEAD IMAGE
+function uploadImageT(req, res){
+    var userId = req.params.id;
+    var teamId = req.params.idT;
+    var fileName = 'Sin imagen';
+
+    if(userId != req.user.sub){
+        res.status(403).send({message: 'No puede acceder a esta funcion'});
+    }else{
+        if(req.files){
+            var filePath = req.files.image.path;
+            var fileSplit = filePath.split('\\');
+            var fileName = fileSplit[2];
+            var ext = fileName.split('.');
+            var fileExt = ext[1];
+            if( fileExt == 'png' ||
+                fileExt == 'jpg' || 
+                fileExt == 'jpeg' ||
+                fileExt == 'gif'){
+                    Team.findByIdAndUpdate(teamId, {image: fileName}, {new:true}, (err, teamUpdated)=>{
+                        if(err){
+                            return res.status(500).send({message: 'Error general'});
+                        }else if(teamUpdated){
+                            return res.send({team: teamUpdated, userImage: teamUpdated.image});
+                        }else{
+                            return res.status(404).send({message: 'No se actualizó la imagen'});
+                        }
+                    })
+                }else{
+                    fs.unlink(filePath, (err)=>{
+                        if(err){
+                            return res.status(500).send({message: 'Error al eliminar y la extensión no es válida'});
+                        }else{
+                            return res.status(403).send({message: 'Extensión no válida, y archivo eliminado'});
+                        }
+                    })
+                }
+        }else{
+            return res.status(404).send({message: 'No has subido una imagen'});
+        }
+    }
+}  
+
+function getImageT(req, res){
+    var fileName = req.params.fileName;
+    var pathFile = './uploads/teams/' + fileName;
+
+    fs.exists(pathFile, (exists)=>{
+        if(exists){
+            return res.sendFile(path.resolve(pathFile))
+        }else{
+           return res.status(404).send({message: 'Imagen inexistente'});
+        }
+    })
+}
 
 //FUNCTIONS ROUTES
 module.exports = {
     deleteTeam,
     getTeams,
     searchTeam,
-    saveTeam
+    saveTeam,
+    uploadImageT,
+    getImageT
 }
