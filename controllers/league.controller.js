@@ -3,7 +3,62 @@ var League = require('../models/league.model');
 var jwt = require('../services/jwt');
 
 //SAVE LEAGUE
+function saveLeague (req, res){
+    var league = new League();
+    var params = req.body;
+    let userId = req.params.id;  
+    let adminId = req.params.idA;
+    if(userId !=req.user.sub){
+        res.status(403).send({message: 'No puede acceder a esta funcion'})
+    }else{
+        if(params.name){
+            League.findOne({name: params.name}, (err, leagueFind)=>{
+                if(err){
+                    res.status(500).send({message: 'ERROR GENERAL', err})
+                }else if(leagueFind){
+                    res.status(200).send({message: 'Nombre de liga en uso'})
+                }else{                       
+                    User.findOne({_id: adminId}, (err, adminFind)=>{
+                        if(err){
+                            res.status(500).send({message:'ERROR GENERAL', err})
+                        }else if(adminFind){
+                            if(adminFind.role!='ADMINH'){
+                                res.status(200).send({message: 'Este usuario no tiene permiso para administrar la liga. Cambie el rol en los datos del usuario'})
+                            }else{
+                                league.name = params.name;
+                                league.admin =  adminId;                                      
+                                league.save((err, leagueSaved)=>{
+                           if(err){
+                                res.status(500).send({message: 'ERROR GENERAL', err})
+                            }else if(leagueSaved){    
+                                User.findById(adminId, (err, adminFind)=>{
+                                    if(err){
+                                        res.status(500).send({message: 'ERROR GENERAL', err})
+                                    }else if(adminFind){
+                                        res.status(200).send({message: 'Liga registrada con éxito', leagueSaved, adminFind}) 
+                                      
+                                    }else{
+                                        res.status(401).send({message: 'No se pudo registrar la liga'})
+                                    }
 
+                                })
+                                                                    
+                            }else{
+                                res.status(401).send({message: 'No se pudo registrar la liga'})
+                                }
+                               })                      
+                            }
+                        }else{
+                            res.status(500).send({message:'Usuario no encontrado'})
+                        }
+                    })  
+                }
+            })   
+}else{
+    res.status(401).send({message: 'Ingrese los datos minimos para el registro'})
+}
+    }
+}
 //UPDATE LEAGUE
 function updateLeague(req, res){
     let userId = req.params.idU;
@@ -106,6 +161,6 @@ module.exports = {
     deleteLeague,    
     updateLeague,
     getLeagues,
-    searchUser
-
+    searchUser,
+    saveLeague
 }

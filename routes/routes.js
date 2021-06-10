@@ -20,6 +20,7 @@ api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userCon
 api.get('/getUsers', userController.getUsers);
 api.post('/login', userController.login);
 //LEAGUE
+api.post('/saveLeague/:id/:idA' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin],  leagueController.saveLeague);
 api.delete('/deleteLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.deleteLeague);
 <<<<<<< HEAD
 <<<<<<< 54af50e56b04b3d1cc2030c911635ef8ce54e3b8
