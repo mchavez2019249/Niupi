@@ -56,6 +56,45 @@ function saveTeam (req, res){
     }
 }
 //UPDATE TEAM
+function updateTeam(req, res){
+    let team = req.params.idH;
+    let update = req.body;
+    let userId = req.params.id;
+    if(userId !=req.user.sub){
+        res.status(403).send({message: 'No puede acceder a esta funcion'})
+    }else{
+        User.findById(userId, (err, adminFind)=>{
+            if(err){
+                res.status(500).send({message: 'ERROR GENERAL', err});
+            }else if(adminFind){
+                Team.findById(team, (err, teamFind)=>{
+                    if(err){
+                        res.status(500).send({message: 'ERROR GENRAL', err});
+                    }else if(teamFind){
+                        if(teamFind.admin == userId){
+                            Hotel.findByIdAndUpdate(team, update, {new: true}, (err, teamUpdated)=>{
+                                if(err){
+                                    res.status(500).send({message: 'ERROR GENRAL', err});
+                                }else if(teamUpdated){
+                                    res.send({message:'El grupo fue actualizado..', teamUpdated, adminFind});
+                                }else{
+                                    res.status(404).send({message: 'grupo no actualizado'});
+                                }
+                            });
+                        }else{
+                            res.status(403).send({message: 'Administrador no autorizado..'});
+                        }
+                    }else{
+                        res.status(404).send({message: 'grupo no actualizado'});
+                    }
+                })
+               
+            }else{
+                res.status(403).send({message: 'Administrador no autorizado'});
+            }
+        })
+           
+    }
 
 //DELETE TEAM
 function deleteTeam(req, res){
@@ -197,5 +236,7 @@ module.exports = {
     searchTeam,
     saveTeam,
     uploadImageT,
-    getImageT
-}
+    getImageT,
+    updateTeam
+
+}        }

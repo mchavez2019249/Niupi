@@ -29,6 +29,7 @@ api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueC
 api.put('/:id/uploadImageT/idT', [mdAuth.ensureAuth, mdUpload], userController.uploadImageT);
 api.get('/getImageT/:fileName', [ mdUpload], userController.getImageT);
 api.delete('/deleteTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.deleteTeam);
+api.put('/updateTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.updateTeam);
 api.get('/getLeagues', teamController.getTeams);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], teamController.searchTeam);
 api.post('/saveTeam/:id', mdAuth.ensureAuth, teamController.saveTeam);
