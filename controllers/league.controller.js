@@ -142,7 +142,7 @@ function searchLeague(req, res){
         res.status(500).send({message: 'No posees permisos para realizar acciones de administrador'})
     }else{
     if(params.search){
-        User.find({$or:[{name: params.search}]}, (err, resultsSearch)=>{
+        League.find({$or:[{name: params.search}]}, (err, resultsSearch)=>{
             if(err){
                 return res.status(500).send({message: 'ERROR GENERAL', err})
             }else if(resultsSearch){

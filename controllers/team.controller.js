@@ -51,7 +51,7 @@ function deleteTeam(req, res){
 }
 //LIST TEAM
 function getTeams(req, res){
-    League.find({}).exec((err, team)=>{
+    Team.find({}).exec((err, team)=>{
         if(err){
             res.status(500).send({message: 'Error en el servidor'})
         }else if(team){
@@ -69,7 +69,7 @@ function searchTeam(req, res){
         res.status(500).send({message: 'No posees permisos para realizar acciones de administrador'})
     }else{
     if(params.search){
-        User.find({$or:[{name: params.search}]}, (err, resultsSearch)=>{
+        Team.find({$or:[{name: params.search}]}, (err, resultsSearch)=>{
             if(err){
                 return res.status(500).send({message: 'ERROR GENERAL', err})
             }else if(resultsSearch){
