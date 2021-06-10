@@ -8,7 +8,7 @@ var connectMultiparty = require('connect-multiparty');
 //controllers routes
 var userController = require('../controllers/user.controller');
 var leagueController = require('../controllers/league.controller');
-
+var teamController = require('../controllers/team.controller');
 
 //USERS
 api.post('/saveUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.saveUser);
@@ -21,5 +21,13 @@ api.get('/getUsers', userController.getUsers);
 api.post('/login', userController.login);
 //LEAGUE
 api.delete('/deleteLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.deleteLeague);
+<<<<<<< 54af50e56b04b3d1cc2030c911635ef8ce54e3b8
+=======
+api.get('/getLeagues', leagueController.getLeagues);
+api.put('/updateLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.updateLeague);
+api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueController.searchUser);
+//TEAM
+api.delete('/deleteTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.deleteTeam);
+>>>>>>> Delete Team + routes
 
 module.exports = api;
