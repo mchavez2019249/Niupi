@@ -29,5 +29,6 @@ api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueC
 api.delete('/deleteTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.deleteTeam);
 api.get('/getLeagues', teamController.getTeams);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], teamController.searchTeam);
+api.post('/saveTeam/:id', mdAuth.ensureAuth, teamController.saveTeam);
 
 module.exports = api;
