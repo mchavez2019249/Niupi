@@ -7,8 +7,8 @@ var jwt = require('../services/jwt');
 //CREATE INIT
 function createInit(req,res){
     let user = new User();
-    user.password = '12345';
-    user.username = 'admin';
+    user.password = 'deportes123';
+    user.username = 'ADMIN';
 
     User.findOne({username: user.username}, (err, userFind)=>{
             if(err){
