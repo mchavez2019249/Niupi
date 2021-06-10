@@ -21,5 +21,7 @@ api.get('/getUsers', userController.getUsers);
 api.post('/login', userController.login);
 //LEAGUE
 api.delete('/deleteLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.deleteLeague);
-
+api.get('/getLeagues', leagueController.getLeagues);
+api.put('/updateLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.updateLeague);
+api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueController.searchUser);
 module.exports = api;

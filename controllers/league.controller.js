@@ -103,15 +103,9 @@ function searchUser(req, res){
 }
 //FUNCTIONS ROUTES
 module.exports = {
-<<<<<<< Updated upstream
-deleteLeague,    
-updateLeague
-=======
-updateLeague,
-    deleteLeague,
+    deleteLeague,    
+    updateLeague,
     getLeagues,
     searchUser
 
-
->>>>>>> Stashed changes
 }
