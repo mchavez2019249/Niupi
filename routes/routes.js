@@ -22,19 +22,12 @@ api.post('/login', userController.login);
 //LEAGUE
 api.post('/saveLeague/:id/:idA' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin],  leagueController.saveLeague);
 api.delete('/deleteLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.deleteLeague);
-<<<<<<< HEAD
-<<<<<<< 54af50e56b04b3d1cc2030c911635ef8ce54e3b8
-=======
-=======
->>>>>>> master
 api.get('/getLeagues', leagueController.getLeagues);
 api.put('/updateLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.updateLeague);
-api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueController.searchUser);
+api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueController.searchLeague);
 //TEAM
 api.delete('/deleteTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.deleteTeam);
-<<<<<<< HEAD
->>>>>>> Delete Team + routes
-=======
->>>>>>> master
+api.get('/getLeagues', teamController.getTeams);
+api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], teamController.searchTeam);
 
 module.exports = api;

@@ -135,7 +135,7 @@ function getLeagues(req, res){
     }) 
 }
 //SEARCH LEAGUE 
-function searchUser(req, res){
+function searchLeague(req, res){
     var params = req.body;
     var userId = req.params.id;
     if(userId != req.user.sub){
@@ -161,6 +161,6 @@ module.exports = {
     deleteLeague,    
     updateLeague,
     getLeagues,
-    searchUser,
+    searchLeague,
     saveLeague
 }
