@@ -68,11 +68,50 @@ function deleteLeague(req, res){
     }
 }
 //LIST LEAGUE
-
+function getLeagues(req, res){
+    League.find({}).exec((err, league)=>{
+        if(err){
+            res.status(500).send({message: 'Error en el servidor'})
+        }else if(league){
+            res.status(200).send({message: 'Ligas encontradas', league})
+        }else{
+            res.status(200).send({message: 'No hay registros'})
+        }
+    }) 
+}
 //SEARCH LEAGUE 
-
+function searchUser(req, res){
+    var params = req.body;
+    var userId = req.params.id;
+    if(userId != req.user.sub){
+        res.status(500).send({message: 'No posees permisos para realizar acciones de administrador'})
+    }else{
+    if(params.search){
+        User.find({$or:[{name: params.search}]}, (err, resultsSearch)=>{
+            if(err){
+                return res.status(500).send({message: 'ERROR GENERAL', err})
+            }else if(resultsSearch){
+                return res.send({resultsSearch})
+            }else{
+                return res.status(404).send({message:'No hay registros para mostrar'})
+            }
+        })
+    }else{
+        return res.status(403).send({message:'Ingresa algún dato en el campo de búsqueda'})
+    }
+    }
+}
 //FUNCTIONS ROUTES
 module.exports = {
+<<<<<<< Updated upstream
 deleteLeague,    
 updateLeague
+=======
+updateLeague,
+    deleteLeague,
+    getLeagues,
+    searchUser
+
+
+>>>>>>> Stashed changes
 }
