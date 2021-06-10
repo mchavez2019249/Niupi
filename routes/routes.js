@@ -17,5 +17,6 @@ api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
 api.put('/updateUser/:id', mdAuth.ensureAuth, userController.updateUser);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.searchUser);
 api.get('/getUsers', userController.getUsers);
+api.post('/login', userController.login);
 
 module.exports = api;
