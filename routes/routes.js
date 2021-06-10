@@ -5,8 +5,9 @@ var api = express.Router();
 var mdAuth = require('../middlewares/authenticated');
 var connectMultiparty = require('connect-multiparty');
 
-//controller route 
+//controllers routes
 var userController = require('../controllers/user.controller');
+var leagueController = require('../controllers/league.controller');
 
 
 //USERS
@@ -18,5 +19,7 @@ api.put('/updateUser/:id', mdAuth.ensureAuth, userController.updateUser);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.searchUser);
 api.get('/getUsers', userController.getUsers);
 api.post('/login', userController.login);
+//LEAGUE
+api.delete('/deleteLeague/:idU/:idL' ,[mdAuth.ensureAuth],leagueController.deleteLeague);
 
 module.exports = api;
