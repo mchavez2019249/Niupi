@@ -1,5 +1,6 @@
 'use strict'
 var League = require('../models/league.model');
+var User = require('../models/user.model');
 var jwt = require('../services/jwt');
 
 //SAVE LEAGUE
@@ -7,7 +8,6 @@ function saveLeague (req, res){
     var league = new League();
     var params = req.body;
     let userId = req.params.id;  
-    let adminId = req.params.idA;
     if(userId !=req.user.sub){
         res.status(403).send({message: 'No puede acceder a esta funcion'})
     }else{
@@ -18,70 +18,78 @@ function saveLeague (req, res){
                 }else if(leagueFind){
                     res.status(200).send({message: 'Nombre de liga en uso'})
                 }else{                       
-                    User.findOne({_id: adminId}, (err, adminFind)=>{
+                    User.findOne({_id: userId}, (err, userFind)=>{
                         if(err){
                             res.status(500).send({message:'ERROR GENERAL', err})
-                        }else if(adminFind){
-                            if(adminFind.role!='ADMINH'){
-                                res.status(200).send({message: 'Este usuario no tiene permiso para administrar la liga. Cambie el rol en los datos del usuario'})
-                            }else{
+                        }else if(userFind){
                                 league.name = params.name;
-                                league.admin =  adminId;                                      
+                                league.admin =  userId;                                      
                                 league.save((err, leagueSaved)=>{
                            if(err){
                                 res.status(500).send({message: 'ERROR GENERAL', err})
                             }else if(leagueSaved){    
-                                User.findById(adminId, (err, adminFind)=>{
+                                User.findById(adminId, (err, userFind)=>{
                                     if(err){
                                         res.status(500).send({message: 'ERROR GENERAL', err})
-                                    }else if(adminFind){
-                                        res.status(200).send({message: 'Liga registrada con éxito', leagueSaved, adminFind}) 
+                                    }else if(userFind){
+                                        res.status(200).send({message: 'Liga registrada con éxito', leagueSaved, userFind}) 
                                       
                                     }else{
                                         res.status(401).send({message: 'No se pudo registrar la liga'})
                                     }
-
                                 })
-                                                                    
                             }else{
                                 res.status(401).send({message: 'No se pudo registrar la liga'})
                                 }
                                })                      
-                            }
+
                         }else{
                             res.status(500).send({message:'Usuario no encontrado'})
                         }
                     })  
                 }
-            })   
-}else{
-    res.status(401).send({message: 'Ingrese los datos minimos para el registro'})
-}
+            })
+        }else{
+            res.status(401).send({message: 'Ingrese los datos minimos para el registro'})
+        }
     }
 }
 //UPDATE LEAGUE
 function updateLeague(req, res){
     let userId = req.params.idU;
-    let LeagueId = req.params.idL;
+    let leagueId = req.params.idL;
     let update = req.body;
 
     if(userId != req.user.sub){
         return res.status(404).send({message: 'No tienes permiso para realizar esta acción'});
     }else{
-        if(update.name && update.phone){
-            User.findOne({_id: userId, Leagues: LeagueId}, (err, userContact)=>{
+        if(update.name){
+            User.findById(userId, (err, userFind)=>{
                 if(err){
                     return res.status(500).send({message: 'Error general'});
-                }else if(userContact){
-                    League.findByIdAndUpdate(LeagueId, update, {new: true}, (err, updateContact)=>{
-                        if(err){
+                }else if(userFind){
+                    League.findById(leagueId,(err, leagueFind)=>{
+                        if (err) {
                             return res.status(500).send({message: 'Error general al actualizar'});
-                        }else if(updateContact){
-                            return res.send({message: 'Liga  actualizada', updateContact});
+                        }else if (leagueFind) {
+                            if (leagueFind.admin == userId || userFind.role == 'ROLE_ADMIN') {
+                                League.findByIdAndUpdate(leagueId, update, {new: true}, (err, updateLeague)=>{
+                                    if(err){
+                                        return res.status(500).send({message: 'Error general al actualizar'});
+                                    }else if(updateLeague){
+                                        return res.send({message: 'Liga  actualizada', updateLeague});
+                                    }else{
+                                        return res.status(401).send({message: 'No se pudo actualizar el contacto'});
+                                    }
+                                })
+                            }else{
+                                return res.status(401).send({message: 'NO tiene autorización para actualizar esta liga'});
+                            }
                         }else{
-                            return res.status(401).send({message: 'No se pudo actualizar el contacto'});
+                            return res.status(401).send({message: 'No se pudo encontrar la liga solicitada'});
                         }
                     })
+                   
                 }else{
                     return res.status(404).send({message: 'Usuario o contacto inexistente'});
                 }
@@ -102,7 +110,7 @@ function deleteLeague(req, res){
             if(err){
                 res.status(500).send({message: 'ERROR GENERAL'});
             }else if(leagueFind){
-                if(leagueFind.admin == adminId){
+                if(leagueFind.admin == userId || userFind.role == 'ROLE_ADMIN'){
                     League.findByIdAndRemove(idLeague, (err, leagueDelete)=>{
                         if(err){
                             res.status(500).send({message: 'ERROR GENERAL'});
@@ -118,8 +126,7 @@ function deleteLeague(req, res){
             }else{
                 res.status(403).send({message: 'Administrador no autorizado'});
             }
-        })
-       
+        }) 
     }
 }
 //LIST LEAGUE
