@@ -49,6 +49,51 @@ function createInit(req,res){
 //LOGIN 
 
 //SAVE 
+function saveUser(req, res){
+    var user = new User();
+    var params = req.body;
+    let userId = req.params.id;
+    if(userId != req.user.sub){
+        return res.status(401).send({ message: 'No tienes permiso para realizar esta acción'});
+    }else{
+    if(params.name && params.username && params.password){
+        User.findOne({username: params.username}, (err, userFind)=>{
+            if(err){
+                return res.status(500).send({message: 'ERROR GENERAL'});
+            }else if(userFind){
+                return res.send({message: 'El nombre de usuario no disponible.'});
+            }else{
+                bcrypt.hash(params.password, null, null, (err, passwordHash)=>{
+                    if(err){
+                        return res.status(500).send({message: 'Error general al comparar contraseña'});
+                    }else if(passwordHash){
+                        user.password = passwordHash;
+                        user.name = params.name;
+                        user.lastname = params.lastname;
+			            user.username = params.username;
+                        user.phone = params.phone; 
+                        user.role = params.role;                        
+                        //user.role = 'ROLE_USER';
+                        user.save((err, userSaved)=>{
+                            if(err){
+                                return res.status(500).send({message: 'Error general al guardar usuario'});
+                            }else if(userSaved){
+                                return res.send({message: 'Usuario creado exitosamente', userSaved});
+                            }else{
+                                return res.status(500).send({message: 'No se guardó el usuario'});
+                            }
+                        })
+                    }else{
+                        return res.status(403).send({message: 'La contraseña no se ha encriptado'});
+                    }
+                })
+            }
+        })
+    }else{
+        return res.status(401).send({message: 'Por favor envía los datos mínimos para la creación del usuario'})
+    }
+}
+}
 
 //UPDATE
 function updateUser(req, res){
@@ -246,7 +291,8 @@ module.exports = {
     getImage,
     searchUser,
     getUsers,
-    createInit
+    createInit,
+    saveUser
 }
 
 

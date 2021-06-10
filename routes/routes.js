@@ -10,6 +10,7 @@ var userController = require('../controllers/user.controller');
 
 
 //USERS
+api.post('/saveUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.saveUser);
 api.delete('/deleteUser/:idU', mdAuth.ensureAuth, userController.deleteUser);
 api.put('/:id/uploadImage', [mdAuth.ensureAuth, mdUpload], userController.uploadImage);
 api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
