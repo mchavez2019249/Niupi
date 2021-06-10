@@ -71,9 +71,8 @@ function saveUser(req, res){
                         user.name = params.name;
                         user.lastname = params.lastname;
 			            user.username = params.username;
-                        user.phone = params.phone; 
-                        user.role = params.role;                        
-                        //user.role = 'ROLE_USER';
+                        user.phone = params.phone;                         
+                        user.role = 'ROLE_USER';
                         user.save((err, userSaved)=>{
                             if(err){
                                 return res.status(500).send({message: 'Error general al guardar usuario'});
