@@ -2,7 +2,7 @@
 
 var League = require('../models/league.model');
 var Team = require('../models/team.model');
-var Matches = require ('../models/matches.model');
+var Match = require ('../models/matches.model');
 var jwt = require('../services/jwt');
 
 //SAVE_MATCH
