@@ -95,7 +95,7 @@ function updateTeam(req, res){
         })
            
     }
-
+}
 //DELETE TEAM
 function deleteTeam(req, res){
     let userId = req.params.idU;
@@ -239,4 +239,4 @@ module.exports = {
     getImageT,
     updateTeam
 
-}        }
+}        
