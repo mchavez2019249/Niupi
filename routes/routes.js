@@ -9,9 +9,10 @@ var connectMultiparty = require('connect-multiparty');
 var userController = require('../controllers/user.controller');
 var leagueController = require('../controllers/league.controller');
 var teamController = require('../controllers/team.controller');
+var matchController = require('../controllers/match.controller');
 
 //USERS
-api.post('/saveUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.saveUser);
+api.post('/saveUser/:id', userController.saveUser);
 api.delete('/deleteUser/:idU', mdAuth.ensureAuth, userController.deleteUser);
 api.put('/:id/uploadImage', [mdAuth.ensureAuth, mdUpload], userController.uploadImage);
 api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
@@ -33,6 +34,8 @@ api.put('/updateTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.updateTeam);
 api.get('/getLeagues', teamController.getTeams);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], teamController.searchTeam);
 api.post('/saveTeam/:id', mdAuth.ensureAuth, teamController.saveTeam);
+
 //MATCHES
+api.post('/saveMatch/:userId/:league/:idTeam1/:idTeam2', mdAuth.ensureAuth, matchController.saveMatch);
 
 module.exports = api;
