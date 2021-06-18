@@ -144,7 +144,7 @@ function getTeams(req, res){
         if(err){
             res.status(500).send({message: 'Error en el servidor'})
         }else if(team){
-            res.status(200).send({message: 'Ligas encontradas', team})
+            res.status(200).send({message: 'Equipos encontrados', team})
         }else{
             res.status(200).send({message: 'No hay registros'})
         }

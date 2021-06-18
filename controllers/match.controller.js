@@ -60,10 +60,19 @@ function deleteMatch(req,res){
 }
 //LIST_MATCH listar a de mayor a menor
 function listMatches(req,res){
-    
+    Team.sort({compareFunction}).exec((err, team)=>{
+        if(err){
+            res.status(500).send({message: 'Error en el servidor'})
+        }else if(team){
+            res.status(200).send({message: 'Tabla de posiciones', team})
+        }else{
+            res.status(200).send({message: 'No hay registros'})
+        }
+    }) 
 }
 
 //FUNCTIONS ROUTES
 module.exports = {
-    saveMatch
+    saveMatch,
+    listMatches
 }
