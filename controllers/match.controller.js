@@ -55,9 +55,35 @@ function saveMatch(req,res){
 
 //DELETE_MATCH
 function deleteMatch(req,res){
-    
+
 
 }
+
+function deleteMatch(req, res) {
+    let matchId = req.params.id;
+
+    Product.findByIdAndRemove(matchId, (err, matchDeleted) => {
+        if (err) {
+            res.status(500).send({
+                message: 'Error general'
+            });
+        } else {
+            if (matchDeleted) {
+                res.status(200).send({
+                    message: 'Eliminado correctamente',
+                    matchDeleted
+                });
+            } else {
+                res.status(404).send({
+                    message: 'No se elimino'
+                });
+            }
+        }
+    });
+};
+
+
+
 //LIST_MATCH listar a de mayor a menor
 function listMatches(req,res){
     Team.sort({compareFunction}).exec((err, team)=>{
@@ -74,5 +100,6 @@ function listMatches(req,res){
 //FUNCTIONS ROUTES
 module.exports = {
     saveMatch,
-    listMatches
+    listMatches,
+    deleteMatch
 }
