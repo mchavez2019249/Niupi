@@ -6,6 +6,10 @@ var teamSchema = Schema({
     name: String,
     icon: String,
     points: Number,
+    gf: Number,
+    gc: Number,
+    diference: Number,
+    matches: Number,
     admin: {type: Schema.ObjectId, ref: 'user'}
     
 })

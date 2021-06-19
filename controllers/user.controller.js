@@ -83,10 +83,6 @@ function login(req, res){
 function saveUser(req, res){
     var user = new User();
     var params = req.body;
-    let userId = req.params.id;
-    if(userId != req.user.sub){
-        return res.status(401).send({ message: 'No tienes permiso para realizar esta acción'});
-    }else{
     if(params.name && params.username && params.password){
         User.findOne({username: params.username}, (err, userFind)=>{
             if(err){
@@ -122,7 +118,6 @@ function saveUser(req, res){
     }else{
         return res.status(401).send({message: 'Por favor envía los datos mínimos para la creación del usuario'})
     }
-}
 }
 
 //UPDATE
