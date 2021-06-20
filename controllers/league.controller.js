@@ -28,7 +28,7 @@ function saveLeague (req, res){
                            if(err){
                                 res.status(500).send({message: 'ERROR GENERAL', err})
                             }else if(leagueSaved){    
-                                User.findById(adminId, (err, userFind)=>{
+                                User.findById(userId, (err, userFind)=>{
                                     if(err){
                                         res.status(500).send({message: 'ERROR GENERAL', err})
                                     }else if(userFind){
@@ -110,19 +110,28 @@ function deleteLeague(req, res){
             if(err){
                 res.status(500).send({message: 'ERROR GENERAL'});
             }else if(leagueFind){
-                if(leagueFind.admin == userId || userFind.role == 'ROLE_ADMIN'){
-                    League.findByIdAndRemove(idLeague, (err, leagueDelete)=>{
-                        if(err){
-                            res.status(500).send({message: 'ERROR GENERAL'});
-                        }else if(leagueDelete){
-                            res.send({message: 'Liga eliminada exitosamente'});
+                User.findById(userId, (err, userFind)=>{
+                    if (err) {
+                        res.status(500).send({message: 'ERROR'});
+                    }else if (userFind) {
+                        if(leagueFind.admin == adminId || adminId.role == 'ROLE_ADMIN'){
+                            League.findByIdAndRemove(idLeague, (err, leagueDelete)=>{
+                                if(err){
+                                    res.status(500).send({message: 'ERROR GENERAL'});
+                                }else if(leagueDelete){
+                                    res.send({message: 'Liga eliminada exitosamente'});
+                                }else{
+                                    res.send({message: 'Error al eliminar liga'});
+                                }
+                            });
                         }else{
-                            res.send({message: 'Error al eliminar liga'});
-                        }
-                    });
-                }else{
-                    res.status(403).send({message: 'Administrador no autorizado'});
-                }             
+                            res.status(403).send({message: 'Administrador no autorizado'});
+                        }   
+                    }else{
+                        res.send({message: 'admin no encontrado'});
+                    }
+                })
+                            
             }else{
                 res.status(403).send({message: 'Administrador no autorizado'});
             }
@@ -163,6 +172,8 @@ function searchLeague(req, res){
     }
     }
 }
+
+
 //FUNCTIONS ROUTES
 module.exports = {
     deleteLeague,    

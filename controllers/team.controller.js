@@ -1,14 +1,14 @@
 'use strict'
 var Team = require('../models/team.model');
 var League = require('../models/league.model');
+var User = require('../models/user.model');
 var jwt = require('../services/jwt');
 
 //SAVE TEAM 
 function saveTeam (req, res){
     var team = new Team();
     var params = req.body;
-    let userId = req.params.id;
-    let leagueId = req.params.idL;  
+    let userId = req.params.id; 
 
     if(userId !=req.user.sub){
         res.status(403).send({message: 'No puede acceder a esta funcion'})
@@ -19,35 +19,28 @@ function saveTeam (req, res){
                     res.status(500).send({message: 'ERROR GENERAL', err})
                 }else if(teamFind){
                     res.status(200).send({message: 'Nombre del equipo en uso'})
-                }else{                       
-                    User.findOne({_id: userId}, (err, userFind)=>{
+                }else{
+                    team.name = params.name;
+                    team.icon = params.icon;
+                    team.admin =  userId;
+                    team.points = 0;
+                    team.gf = 0;
+                    team.gc = 0;
+                    team.diference = 0;
+                    team.matches = 0;
+                    team.save((err, teamSaved)=>{
                         if(err){
-                            res.status(500).send({message:'ERROR GENERAL', err})
-                        }else if(userFind){
-                                team.name = params.name;
-                                team.icon = params.icon;
-                                team.admin =  userId;                                      
-                                team.save((err, teamSaved)=>{
-                                    if(err){
-                                        res.status(500).send({message: 'ERROR GENERAL', err})
-                                    }else if(teamSaved){    
-                                        League.findByIdAndUpdate(leagueId, {$push:{team: teamSaved._id}}, {new:true}, (err, teamSaved)=>{
-                                            if(err){
-                                                res.status(500).send({message: 'ERROR GENERAL', err})
-                                            }else if(userFind){
-                                                res.status(200).send({message: 'Equipo registrado con éxito', teamSaved, userFind}) 
-                                            }else{
-                                                res.status(401).send({message: 'No se pudo registrar el equipo'})
-                                            }
-                                        })
-                                    }else{
-                                        res.status(401).send({message: 'No se pudo registrar el equipo'})
-                                    }
-                               })                      
+                            res.status(500).send({message: 'ERROR GENERAL', err})
+                        }else if(teamSaved){    
+                          
+                                
+                                    res.status(200).send({message: 'Equipo registrado con éxito', teamSaved}) 
+    
+                         
                         }else{
-                            res.status(500).send({message:'Usuario no encontrado'})
+                            res.status(401).send({message: 'No se pudo registrar el equipo'})
                         }
-                    })  
+                    })                      
                 }
             })
         }else{
@@ -57,9 +50,9 @@ function saveTeam (req, res){
 }
 //UPDATE TEAM
 function updateTeam(req, res){
-    let team = req.params.idH;
+    let team = req.params.idT;
     let update = req.body;
-    let userId = req.params.id;
+    let userId = req.params.idU;
     if(userId !=req.user.sub){
         res.status(403).send({message: 'No puede acceder a esta funcion'})
     }else{
@@ -72,7 +65,7 @@ function updateTeam(req, res){
                         res.status(500).send({message: 'ERROR GENRAL', err});
                     }else if(teamFind){
                         if(teamFind.admin == userId){
-                            Hotel.findByIdAndUpdate(team, update, {new: true}, (err, teamUpdated)=>{
+                            Team.findByIdAndUpdate(team, update, {new: true}, (err, teamUpdated)=>{
                                 if(err){
                                     res.status(500).send({message: 'ERROR GENRAL', err});
                                 }else if(teamUpdated){
@@ -105,35 +98,35 @@ function deleteTeam(req, res){
     if(userId != req.user.sub){
         res.status(500).send({message: 'No puedes acceder a esta funcion'})
     }else{
-        League.findById(leagueId, (err, leagueFind)=>{
+        Team.findByIdAndRemove(teamId, (err, teamRemoved)=>{
             if(err){
-               res.status(500).send({message: 'error general', err})
-            }else if(leagueFind){
-               if(leagueFind.admin == userId){
-           League.findOneAndUpdate({_id: leagueId, team: teamId},
-               {$pull: {team: teamId}}, {new:true}, (err, teamPull)=>{
-                   if(err){
-                       return res.status(500).send({message: 'Error general'})
-                   }else if(teamPull){
-                    Team.findByIdAndRemove(teamId, (err, teamRemoved)=>{
+                return res.status(500).send({message: 'Error general', err})
+            }else if(teamRemoved){
+                League.findById(leagueId, (err, leagueFind)=>{
+                    if(err){
+                       res.status(500).send({message: 'error general', err})
+                    }else if(leagueFind){
+                       if(leagueFind.admin == userId){
+                   League.findOneAndUpdate({_id: leagueId, team: teamId},
+                       {$pull: {team: teamId}}, {new:true}, (err, teamPull)=>{
                            if(err){
-                               return res.status(500).send({message: 'Error general', err})
-                           }else if(teamRemoved){
-                               return res.send({message: 'Equipo eliminado exitosamente', teamPull});
+                               return res.status(500).send({message: 'Error general'})
+                           }else if(teamPull){
+                               return res.status.send({message:'Equipo eliminado exitosamente', teamPull})
                            }else{
-                               return res.status(404).send({message: 'Registro no encontrado o Equipo ya eliminado'})
+                               return res.status(404).send({message: 'Eliminado de la base de datos, aun existente en Liga'})
                            }
-                       })
-                   }else{
-                       return res.status(404).send({message: 'Eliminado de la base de datos, aun existente en Liga'})
-                   }
-               }).populate('team')
-       
-               }else{
-                   res.status(418).send({message: 'Usuario no permitido'});   
-               }
+                       }).populate('team')
+               
+                       }else{
+                           res.status(418).send({message: 'Usuario no permitido'});   
+                       }
+                    }else{
+                        res.status(404).send({message: 'Eliminado de la base de datos pero no de la liga'});
+                    }
+                })
             }else{
-                res.status(404).send({message: 'Liga no encontrada'});
+                return res.status(404).send({message: 'Registro no encontrado o Equipo ya eliminado'})
             }
         })
     }
@@ -229,6 +222,45 @@ function getImageT(req, res){
     })
 }
 
+function setTeam (req,res){
+    var teamId = req.params.idT;
+    var leagueId = req.params.idL;
+    var userId = req.params.idU;
+    if(userId != req.user.sub){
+        res.status(403).send({message: 'No puede acceder a esta funcion'});
+    }else{
+        User.findById(userId, (err,userFind)=>{
+            if (err) {
+                res.status(500).send({message: 'Error general'});
+            }else if (userFind) {
+                League.findById(leagueId, (err, leagueFind)=>{
+                    if (err) {
+                        res.status(500).send({message: 'Error general'});
+                    }else if (leagueFind) {
+                        if (leagueFind.admin == userId) {
+                            League.findOneAndUpdate(leagueId, {$push:{teams: teamId}}, {new: true}, (err, pushTeam)=>{
+                                if(err){
+                                    res.status(500).send({message: 'Error general al setear el contacto'});
+                                }else if(pushTeam){
+                                    return res.status(200).send({message: 'Team guardado correctamente', pushTeam});
+                                }else{
+                                    res.status(200).send({message: 'no seteado pero en la base de datos'});
+                                }
+                            }) 
+                        }else{
+                            res.status(200).send({message: 'Usuario no autorizado'});
+                        }      
+                    }else{
+                        res.status(200).send({message: 'Liga no econtrada'});
+                    }
+                })       
+            }else{
+                res.status(200).send({message: 'Usuario no encontrado'});
+            }
+        })
+    }
+}
+
 //FUNCTIONS ROUTES
 module.exports = {
     deleteTeam,
@@ -237,6 +269,7 @@ module.exports = {
     saveTeam,
     uploadImageT,
     getImageT,
-    updateTeam
+    updateTeam,
+    setTeam
 
 }        

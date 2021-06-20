@@ -1,5 +1,5 @@
 'use strict'
-
+var routes = require('./routes/routes.js');
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -16,5 +16,5 @@ app.use((req, res, next) => {
 	next();
 });
 
-
+app.use('/api', routes);
 module.exports = app;
