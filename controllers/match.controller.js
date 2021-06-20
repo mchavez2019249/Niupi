@@ -253,40 +253,6 @@ function saveMatch(req,res){
 
 }
 
-<<<<<<< HEAD
-=======
-//DELETE_MATCH
-function deleteMatch(req,res){
-
-
-}
-
-function deleteMatch(req, res) {
-    let matchId = req.params.id;
-
-    Product.findByIdAndRemove(matchId, (err, matchDeleted) => {
-        if (err) {
-            res.status(500).send({
-                message: 'Error general'
-            });
-        } else {
-            if (matchDeleted) {
-                res.status(200).send({
-                    message: 'Eliminado correctamente',
-                    matchDeleted
-                });
-            } else {
-                res.status(404).send({
-                    message: 'No se elimino'
-                });
-            }
-        }
-    });
-};
-
-
-
->>>>>>> master
 //LIST_MATCH listar a de mayor a menor
 function listMatches(req,res){
     Team.sort({compareFunction}).exec((err, team)=>{
@@ -304,5 +270,5 @@ function listMatches(req,res){
 module.exports = {
     saveMatch,
     listMatches,
-    deleteMatch
+    
 }
