@@ -188,27 +188,32 @@ function deleteUser(req, res){
             if(err){
                 res.status(500).send({message: 'Error general'})
             }else if(userFind){
-                if(params.password){
-                    bcrypt.compare(params.password, userFind.password, (err, passwordCheck)=>{
-                        if(err){
-                            res.status(500).send({message: 'Error general', err})
-                        }else if(passwordCheck){
-                                User.findByIdAndRemove(userId, (err, userFind)=>{
-                                    if(err){
-                                        res.status(500).send({message: 'Error general'})
-                                    }else if(userFind){
-                                        res.status(200).send({message: 'Eliminado exitosamente'})
-                                    }else{
-                                        res.status(403).send({message: 'Error al eliminar'})
-                                    }
-                                })
-                        }else{
-                            res.status(403).send({message: 'Contraseña incorrecta'})
-                        }
-                    })
+                if(userFind.role != 'ROLE_ADMIN'){
+                    res.status(403).send({message: 'No se puede eliminar un usuario administrador'})
                 }else{
-                    res.status(200).send({message:'Ingrese la contraseña del usuario para eliminar'})
+                    if(params.password){
+                        bcrypt.compare(params.password, userFind.password, (err, passwordCheck)=>{
+                            if(err){
+                                res.status(500).send({message: 'Error general', err})
+                            }else if(passwordCheck){
+                                    User.findByIdAndRemove(userId, (err, userFind)=>{
+                                        if(err){
+                                            res.status(500).send({message: 'Error general'})
+                                        }else if(userFind){
+                                            res.status(200).send({message: 'Eliminado exitosamente'})
+                                        }else{
+                                            res.status(403).send({message: 'Error al eliminar'})
+                                        }
+                                    })
+                            }else{
+                                res.status(403).send({message: 'Contraseña incorrecta'})
+                            }
+                        })
+                    }else{
+                        res.status(200).send({message:'Ingrese la contraseña del usuario para eliminar'})
+                    }
                 }
+                
             }else{
                 res.status(403).send({message: 'Usuario inexistente'})
             }
