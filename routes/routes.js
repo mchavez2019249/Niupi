@@ -19,7 +19,7 @@ api.put('/:id/uploadImage', [mdAuth.ensureAuth, mdUpload], userController.upload
 api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
 api.put('/updateUser/:id', mdAuth.ensureAuth, userController.updateUser);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.searchUser);
-api.get('/getUsers', userController.getUsers);
+api.get('/getUsers', [mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.getUsers);
 api.post('/login', userController.login);
 //LEAGUE
 api.post('/saveLeague/:id' ,mdAuth.ensureAuth,leagueController.saveLeague);

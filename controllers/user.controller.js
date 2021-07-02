@@ -249,13 +249,18 @@ function searchUser(req, res){
 }
 //LIST
 function getUsers(req, res){
+    var userId = req.params.id;
     User.find({}).exec((err, user)=>{
-        if(err){
-            res.status(500).send({message: 'Error en el servidor'})
-        }else if(user){
-            res.status(200).send({message: 'Usuarios encontrados', users:user})
+        if(userId != req.user.sub){
+            res.status(403).send({message: 'NO puede acceder a la función'})
         }else{
-            res.status(200).send({message: 'No hay registros'})
+            if(err){
+                res.status(500).send({message: 'Error en el servidor'})
+            }else if(user){
+                res.status(200).send({message: 'Usuarios encontrados', users:user})
+            }else{
+                res.status(200).send({message: 'No hay registros'})
+            }
         }
     }) 
 }
