@@ -188,7 +188,7 @@ function deleteUser(req, res){
             if(err){
                 res.status(500).send({message: 'Error general'})
             }else if(userFind){
-                if(userFind.role != 'ROLE_ADMIN'){
+                if(userFind.role == 'ROLE_ADMIN'){
                     res.status(403).send({message: 'No se puede eliminar un usuario administrador'})
                 }else{
                     if(params.password){
@@ -200,7 +200,7 @@ function deleteUser(req, res){
                                         if(err){
                                             res.status(500).send({message: 'Error general'})
                                         }else if(userFind){
-                                            res.status(200).send({message: 'Eliminado exitosamente'})
+                                            res.status(200).send({message: 'Eliminado exitosamente', userRemoved:userFind})
                                         }else{
                                             res.status(403).send({message: 'Error al eliminar'})
                                         }

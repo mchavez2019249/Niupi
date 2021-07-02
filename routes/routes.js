@@ -14,7 +14,7 @@ var matchController = require('../controllers/match.controller');
 
 //USERS
 api.post('/saveUser', userController.saveUser);
-api.delete('/deleteUser/:idU', mdAuth.ensureAuth, userController.deleteUser);
+api.put('/deleteUser/:idU', mdAuth.ensureAuth, userController.deleteUser);
 //api.put('/:id/uploadImage', [mdAuth.ensureAuth, mdUpload], userController.uploadImage);
 //api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
 api.put('/updateUser/:id', mdAuth.ensureAuth, userController.updateUser);
@@ -40,3 +40,32 @@ api.put('/setTeam/:idL/:idT/:idU', mdAuth.ensureAuth, teamController.setTeam);
 api.post('/saveMatch/:idUser/:idLeague/:idteam1/:idteam2', mdAuth.ensureAuth, matchController.saveMatch);
 
 module.exports = api;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
