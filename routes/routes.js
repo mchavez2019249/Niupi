@@ -15,8 +15,8 @@ var matchController = require('../controllers/match.controller');
 //USERS
 api.post('/saveUser', userController.saveUser);
 api.put('/deleteUser/:idU', mdAuth.ensureAuth, userController.deleteUser);
-//api.put('/:id/uploadImage', [mdAuth.ensureAuth, mdUpload], userController.uploadImage);
-//api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
+api.put('/:id/uploadImage', [mdAuth.ensureAuth, mdUpload], userController.uploadImage);
+api.get('/getImage/:fileName', [ mdUpload], userController.getImage);
 api.put('/updateUser/:id', mdAuth.ensureAuth, userController.updateUser);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], userController.searchUser);
 api.get('/getUsers', userController.getUsers);
@@ -28,8 +28,8 @@ api.get('/getLeagues', leagueController.getLeagues);
 api.put('/updateLeague/:idU/:idL' ,mdAuth.ensureAuth,leagueController.updateLeague);
 api.post('/searchUser/:id' ,[mdAuth.ensureAuth, mdAuth.ensureAuthAdmin], leagueController.searchLeague);
 //TEAM
-//api.put('/:id/uploadImageT/idT', [mdAuth.ensureAuth, mdUpload], userController.uploadImageT);
-//api.get('/getImageT/:fileName', [ mdUpload], userController.getImageT);
+api.put('/:id/uploadImageT/:idT', [mdAuth.ensureAuth,mdUpload], teamController.uploadImageT);
+api.get('/getImageT/:fileName', [ mdUpload], teamController.getImageT);
 api.delete('/deleteTeam/:idU/:idT/:idL' ,[mdAuth.ensureAuth],teamController.deleteTeam);
 api.put('/updateTeam/:idU/:idT' ,[mdAuth.ensureAuth],teamController.updateTeam);
 api.get('/getTeams', teamController.getTeams);

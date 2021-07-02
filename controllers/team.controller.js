@@ -3,7 +3,8 @@ var Team = require('../models/team.model');
 var League = require('../models/league.model');
 var User = require('../models/user.model');
 var jwt = require('../services/jwt');
-
+var fs = require('fs');
+var path = require('path');
 //SAVE TEAM 
 function saveTeam (req, res){
     var team = new Team();
@@ -171,12 +172,11 @@ function uploadImageT(req, res){
     var userId = req.params.id;
     var teamId = req.params.idT;
     var fileName = 'Sin imagen';
-
     if(userId != req.user.sub){
         res.status(403).send({message: 'No puede acceder a esta funcion'});
     }else{
         if(req.files){
-            var filePath = req.files.image.path;
+            var filePath = req.files.icon.path;
             var fileSplit = filePath.split('\\');
             var fileName = fileSplit[2];
             var ext = fileName.split('.');
@@ -185,11 +185,11 @@ function uploadImageT(req, res){
                 fileExt == 'jpg' || 
                 fileExt == 'jpeg' ||
                 fileExt == 'gif'){
-                    Team.findByIdAndUpdate(teamId, {image: fileName}, {new:true}, (err, teamUpdated)=>{
+                    Team.findByIdAndUpdate(teamId, {icon: fileName}, {new:true}, (err, teamUpdated)=>{
                         if(err){
                             return res.status(500).send({message: 'Error general'});
                         }else if(teamUpdated){
-                            return res.send({team: teamUpdated, userImage: teamUpdated.image});
+                            return res.send({team: teamUpdated, teamImage: teamUpdated.icon});
                         }else{
                             return res.status(404).send({message: 'No se actualizó la imagen'});
                         }
@@ -207,12 +207,11 @@ function uploadImageT(req, res){
             return res.status(404).send({message: 'No has subido una imagen'});
         }
     }
-}  
+} 
 
 function getImageT(req, res){
     var fileName = req.params.fileName;
-    var pathFile = './uploads/teams/' + fileName;
-
+    var pathFile = './uploads/users/' + fileName;
     fs.exists(pathFile, (exists)=>{
         if(exists){
             return res.sendFile(path.resolve(pathFile))

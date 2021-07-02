@@ -3,7 +3,8 @@
 var User = require('../models/user.model');
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../services/jwt');
-
+var fs = require('fs');
+var path = require('path');
 //CREATE INIT
 function createInit(req,res){
     let user = new User();
@@ -259,10 +260,10 @@ function getUsers(req, res){
     }) 
 }
 //UPLOAD IMAGE
+
 function uploadImage(req, res){
     var userId = req.params.id;
     var fileName = 'Sin imagen';
-
     if(userId != req.user.sub){
         res.status(403).send({message: 'No puede acceder a esta funcion'});
     }else{
@@ -298,7 +299,7 @@ function uploadImage(req, res){
             return res.status(404).send({message: 'No has subido una imagen'});
         }
     }
-}  
+}   
 
 function getImage(req, res){
     var fileName = req.params.fileName;
