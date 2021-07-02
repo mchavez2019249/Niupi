@@ -249,11 +249,7 @@ function searchUser(req, res){
 }
 //LIST
 function getUsers(req, res){
-    var userId = req.params.id;
-    User.find({}).exec((err, user)=>{
-        if(userId != req.user.sub){
-            res.status(403).send({message: 'NO puede acceder a la función'})
-        }else{
+            User.find({}).exec((err, user)=>{
             if(err){
                 res.status(500).send({message: 'Error en el servidor'})
             }else if(user){
@@ -261,8 +257,7 @@ function getUsers(req, res){
             }else{
                 res.status(200).send({message: 'No hay registros'})
             }
-        }
-    }) 
+        }) 
 }
 //UPLOAD IMAGE
 
