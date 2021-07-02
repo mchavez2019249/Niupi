@@ -144,7 +144,7 @@ function getLeagues(req, res){
         if(err){
             res.status(500).send({message: 'Error en el servidor'})
         }else if(league){
-            res.status(200).send({message: 'Ligas encontradas', league})
+            res.status(200).send({message: 'Ligas encontradas', leagueFind: league})
         }else{
             res.status(200).send({message: 'No hay registros'})
         }
