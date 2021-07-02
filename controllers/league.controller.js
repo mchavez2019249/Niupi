@@ -32,7 +32,7 @@ function saveLeague (req, res){
                                     if(err){
                                         res.status(500).send({message: 'ERROR GENERAL', err})
                                     }else if(userFind){
-                                        res.status(200).send({message: 'Liga registrada con éxito', leagueSaved, userFind}) 
+                                        res.status(200).send({message: 'Liga registrada con éxito', savedL: leagueSaved, userFind}) 
                                       
                                     }else{
                                         res.status(401).send({message: 'No se pudo registrar la liga'})
