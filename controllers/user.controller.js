@@ -252,7 +252,7 @@ function getUsers(req, res){
         if(err){
             res.status(500).send({message: 'Error en el servidor'})
         }else if(user){
-            res.status(200).send({message: 'Usuarios encontrados', user})
+            res.status(200).send({message: 'Usuarios encontrados', users:user})
         }else{
             res.status(200).send({message: 'No hay registros'})
         }
