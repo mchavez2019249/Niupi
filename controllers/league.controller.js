@@ -119,7 +119,7 @@ function deleteLeague(req, res){
                                 if(err){
                                     res.status(500).send({message: 'ERROR GENERAL'});
                                 }else if(leagueDelete){
-                                    res.send({message: 'Liga eliminada exitosamente'});
+                                    res.send({message: 'Liga eliminada exitosamente', leagueRemoved: leagueDelete});
                                 }else{
                                     res.send({message: 'Error al eliminar liga'});
                                 }
@@ -183,7 +183,7 @@ function listLeagueU(req, res){
             if(err){
                 res.status(500).send({message: 'Error en el servidor'});
             }else if(leaguesFind){
-                res.send({message: 'Estas son tus ligas: ', leaguesFind});
+                res.send({message: 'Estas son tus ligas: ', leaguefind: leaguesFind});
             }else{
                 res.status(404).send({message: 'No hay registros'});
             }
