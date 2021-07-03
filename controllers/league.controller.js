@@ -119,7 +119,7 @@ function deleteLeague(req, res){
                                 if(err){
                                     res.status(500).send({message: 'ERROR GENERAL'});
                                 }else if(leagueDelete){
-                                    res.send({message: 'Liga eliminada exitosamente', leagueRemoved: leagueDelete});
+                                    res.send({message: 'Liga eliminada exitosamente',leagueDelete});
                                 }else{
                                     res.send({message: 'Error al eliminar liga'});
                                 }
