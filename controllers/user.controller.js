@@ -227,6 +227,8 @@ function deleteUser(req, res){
         })
     }
 }
+
+
 //SEARCH
 function searchUser(req, res){
     var params = req.body;
