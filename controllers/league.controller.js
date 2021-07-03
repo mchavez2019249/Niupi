@@ -173,6 +173,23 @@ function searchLeague(req, res){
     }
 }
 
+//LIST LEAGUE BYUSER
+function listLeagueU(req, res){
+    let userId = req.params.id;
+    if(userId != req.user.sub){
+        res.status(500).send({message: 'No tienes permisos para realizar esta acción'})
+    }else{
+        League.find({$or: [{admin: req.params.id}]}).exec((err, leaguesFind)=>{
+            if(err){
+                res.status(500).send({message: 'Error en el servidor'});
+            }else if(leaguesFind){
+                res.send({message: 'Estas son tus ligas: ', leaguesFind});
+            }else{
+                res.status(404).send({message: 'No hay registros'});
+            }
+        })
+    }
+}
 
 //FUNCTIONS ROUTES
 module.exports = {
@@ -180,5 +197,6 @@ module.exports = {
     updateLeague,
     getLeagues,
     searchLeague,
-    saveLeague
+    saveLeague,
+    listLeagueU
 }

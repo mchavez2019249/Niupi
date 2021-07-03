@@ -5,6 +5,11 @@ var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../services/jwt');
 var fs = require('fs');
 var path = require('path');
+
+var fs = require('fs');
+var path = require('path');
+
+
 //CREATE INIT
 function createInit(req,res){
     let user = new User();
