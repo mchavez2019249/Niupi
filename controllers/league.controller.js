@@ -103,6 +103,7 @@ function updateLeague(req, res){
 function deleteLeague(req, res){
     var idLeague = req.params.idL;
     var adminId = req.params.idU;
+    console.log(req.params.idL, req.params.idU);
     if(adminId !=req.user.sub){
         res.status(403).send({message: 'No puede acceder a esta funcion'})
     }else{
