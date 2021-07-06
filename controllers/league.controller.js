@@ -111,7 +111,7 @@ function deleteLeague(req, res){
             if(err){
                 res.status(500).send({message: 'ERROR GENERAL 1'});
             }else if(leagueFind){
-                User.findById(userId, (err, userFind)=>{
+                User.findById(adminId, (err, userFind)=>{
                     if (err) {
                         res.status(500).send({message: 'ERROR'});
                     }else if (userFind) {
