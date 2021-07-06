@@ -43,7 +43,6 @@ api.put('/setTeam/:idL/:idT/:idU', mdAuth.ensureAuth, teamController.setTeam);
 
 //MATCHES
 api.post('/saveMatch/:idUser/:idLeague/:idteam1/:idteam2', mdAuth.ensureAuth, matchController.saveMatch);
-//api.post('/saveMatch/:userId/:league/:idTeam1/:idTeam2', mdAuth.ensureAuth, matchController.saveMatch);
 api.get('/listMatches/:idL/:idU', mdAuth.ensureAuth, matchController.listMatches);
 
 module.exports = api;

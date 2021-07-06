@@ -520,78 +520,24 @@ function saveMatch(req,res){
 }
 
 //LIST_MATCH listar a de mayor a menor
-/*
-function listMatches(req,res){
-    Team.sort({compareFunction}).exec((err, team)=>{
-        if(err){
-            res.status(500).send({message: 'Error en el servidor'})
-        }else if(team){
-            res.status(200).send({message: 'Tabla de posiciones', team})
-        }else{
-            res.status(200).send({message: 'No hay registros'})
-        }
-    }) 
-}
-*/
-/*
-function listMatches(req,res){
 
+function listMatches(req, res){
     let leagueId = req.params.idL;
-    let userId = req.params.idU;
-
-    if(userId != req.user.sub){
-        return res.status(401).send({ message: 'No tienes permiso para realizar esta acción'});
-    }else{
-    League.findById(leagueId, (err, leagueFind)=>{
-        if(err){
-            res.status(500).send({message: 'Error en el servidor', err});
-        }else if(leagueFind){
-           Team.findById(leagueFind.teams, (err, teamsFind)=>{
-               if(err){
-                res.status(500).send({message: 'Error en el servidor', err});
-               }else if(teamsFind){
-                function compareNumbers(a, b) {
-                    return a - b;
-                  }
-                   let prueba = teamsFind.points; 
-                    prueba.sort(compareNumbers);
-               }else{
-                res.status(200).send({message: 'No hay registros'});
-               }
-           })
-        }else{
-            res.status(200).send({message: 'No hay registros'});
-        }
-    })
+        Team.find({teams: req.params.leagueId}).sort({points: -1}).exec((err, teamsFind)=>{
+            if(err){
+                res.status(500).send({message: 'Error general en el servidor', err});
+            }else if(teamsFind){
+                res.send({message: 'Estos son los equipos: ', teamsFind});
+            }else{
+                res.status(404).send({message: 'No hay registros.'});
+            }
+        })
 }
-}
-*/
-
-async function listMatches(req, res) {
-    var leagueId = req.params.idL;
-    let userId = req.params.idU;
-    if(userId != req.user.sub){
-        return res.status(401).send({ message: 'No tienes permiso para realizar esta acción'});
-    }else{
-    var League = await League.find({league: _id })
-    await League.find({ team: League }).populate('points', 'name').exec((err, match) => {
-        if (err) {
-            return res.status(500).send({ mensaje: "Error en la petición" })
-        } else if (!match) {
-            return res.status(500).send({ mensaje: "No se ha podido obtener la tabla" })
-        } else {
-            return res.status(200).send({ match })
-        }
-    })
-}
-}
-
 
 
 //FUNCTIONS ROUTES
 module.exports = {
     saveMatch,
-    listMatches,
     listMatches
 }
 
