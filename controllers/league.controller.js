@@ -109,7 +109,7 @@ function deleteLeague(req, res){
     }else{
         League.findById(idLeague, (err, leagueFind)=>{
             if(err){
-                res.status(500).send({message: 'ERROR GENERAL'});
+                res.status(500).send({message: 'ERROR GENERAL 1'});
             }else if(leagueFind){
                 User.findById(userId, (err, userFind)=>{
                     if (err) {
@@ -118,7 +118,7 @@ function deleteLeague(req, res){
                         if(leagueFind.admin == adminId || adminId.role == 'ROLE_ADMIN'){
                             League.findByIdAndRemove(idLeague, (err, leagueDelete)=>{
                                 if(err){
-                                    res.status(500).send({message: 'ERROR GENERAL'});
+                                    res.status(500).send({message: 'ERROR GENERAL 2'});
                                 }else if(leagueDelete){
                                     res.send({message: 'Liga eliminada exitosamente',deletedL:leagueDelete});
                                 }else{
